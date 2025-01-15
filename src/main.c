@@ -1,8 +1,8 @@
-#include <stdio.h>
 #include <unistd.h>
 
-#include "draw.h"
-#include "term.h"
+#include "headers/controls.h"
+#include "headers/draw.h"
+#include "headers/term.h"
 
 editor_t editor;
 screen_buffer_t screen_buffer;
@@ -20,6 +20,8 @@ int main(void)
 		read(STDIN_FILENO, &c, 1);
 		if (c == '\004')
 			break;
+		else
+			parse_input_char(c);
 		refresh_screen();
 	}
 

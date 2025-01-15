@@ -1,16 +1,19 @@
 TARGET=editor
 CC=gcc
 
-OBJ = main.o draw.o term.o 
+OBJ = main.o term.o draw.o controls.o
 
 $(TARGET): $(OBJ)
 	mkdir -p ../build
 	$(CC) -o $(TARGET) $(OBJ) -g
 	mv $(TARGET) ../build/
 
-main.o: term.h draw.h
-term.o: term.h draw.h
-draw.o: term.h draw.h
+main.o: headers/term.h headers/draw.h headers/controls.h
+term.o: headers/term.h 
+draw.o: headers/term.h headers/draw.h
+controls.o: headers/controls.h headers/__defines.h headers/draw.h headers/term.h
+
+
 
 .PHONY: clean
 clean:

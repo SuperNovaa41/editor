@@ -4,8 +4,14 @@
 #ifndef TERM_H
 #define TERM_H
 
+typedef enum {
+	COMMAND_MODE,
+	INSERT_MODE,
+} control_type_t;
+
 typedef struct {
 	struct termios term_settings;
+	control_type_t control_type;
 	size_t cols, rows;
 	int cx, cy; // cursor pos
 } editor_t;

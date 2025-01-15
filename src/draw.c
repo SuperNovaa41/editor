@@ -2,8 +2,8 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "draw.h"
-#include "term.h"
+#include "headers/draw.h"
+#include "headers/term.h"
 
 #define MAX_LEN 256
 
@@ -17,13 +17,11 @@ extern screen_buffer_t screen_buffer;
 void refresh_screen(void)
 {
 	/**
-	 * TODO: need to move the cursor back at the end
-	 * also need to draw the cusor coords at the bottom
+	 * TODO: 
 	 * and need to implement controls
 	 */
 	
 	int cur_x, cur_y;
-	char* move_cursor;
 
 	cur_x = editor.cx;
 	cur_y = editor.cy;
@@ -36,10 +34,9 @@ void refresh_screen(void)
 	screen_buffer_append(&screen_buffer, CLEAR_SCREEN_STR, CLEAR_SCREEN_STR_LEN);
 
 	draw_editor_rows();
+	draw_cursor_pos();
 
-	move_cursor_pos(&move_cursor, cur_x, cur_y);
-	screen_buffer_append(&screen_buffer, move_cursor, strlen(move_cursor));
-	free(move_cursor);
+	move_cursor_pos(cur_x, cur_y);
 
 	screen_buffer_append(&screen_buffer, SHOW_CURSOR_STR, SHOW_CURSOR_STR_LEN);
 
@@ -53,11 +50,21 @@ void draw_editor_rows(void)
 		screen_buffer_append(&screen_buffer, "~\r\n", 3);
 }
 
-
-void move_cursor_pos(char** out, int x, int y)
+void draw_cursor_pos(void)
 {
-	*out = malloc(sizeof(char) * MAX_LEN);
-	snprintf(*out, MAX_LEN, "\e[%d;%dH", x, y);
+	char* pos = malloc(sizeof(char) * MAX_LEN);
+	snprintf(pos, MAX_LEN, "%d,%d", editor.cx, editor.cy);
+	screen_buffer_append(&screen_buffer, pos, strlen(pos));
+	free(pos);
+}
+
+void move_cursor_pos(int x, int y)
+{
+	// TODO: add check for boundaries
+	char* out = malloc(sizeof(char) * MAX_LEN);
+	snprintf(out, MAX_LEN, "\e[%d;%dH", y, x);
+	screen_buffer_append(&screen_buffer, out, strlen(out));
+	free(out);
 }
 
 #undef MAX_LEN

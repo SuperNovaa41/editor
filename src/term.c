@@ -6,7 +6,7 @@
 #include <unistd.h>
 
 
-#include "term.h"
+#include "headers/term.h"
 
 /** BEGIN extern section **/
 
@@ -107,8 +107,10 @@ void setup_terminal(void)
 		exit(EXIT_FAILURE);
 	}
 
-	editor.cx = 0;
-	editor.cy = 0;
+	editor.control_type = COMMAND_MODE;
+
+	editor.cx = 1;
+	editor.cy = 1;
 
 	editor.cols = win.ws_col;
 	editor.rows = win.ws_row;
