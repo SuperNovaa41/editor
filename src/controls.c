@@ -64,20 +64,37 @@ int parse_input_char(char input_char)
 	return 0;
 }
 
+#define DO_FALLDOWN() if (editor.cx > editor.rows[editor.cy - 1].len)  {editor.cx = editor.rows[editor.cy - 1].len;move_cursor_pos(editor.cx, editor.cy);}
+
 void move_cursor(movement_t dir)
 {
 	switch(dir) {
 		case LEFT:
+			if (editor.cx - 1 <= 0)
+				break;
 			move_cursor_pos(--editor.cx, editor.cy);	
 			break;
 		case RIGHT:
+			if (editor.cx + 1 > editor.rows[editor.cy - 1].len)
+				break;
 			move_cursor_pos(++editor.cx, editor.cy);
 			break;
 		case UP:
+			if (editor.cy -1 <= 0)
+				break;
 			move_cursor_pos(editor.cx, --editor.cy);
+			
+			// want to fall down to the end of the line if we're moving to a shorter one
+			DO_FALLDOWN();
+
 			break;
 		case DOWN:
+			if (editor.cy + 1 >= editor.num_rows)
+				break;
 			move_cursor_pos(editor.cx, ++editor.cy);
+			
+			DO_FALLDOWN();
+			
 			break;
 		case HOME:
 			move_cursor_pos(1, 1);
@@ -94,3 +111,4 @@ void move_cursor(movement_t dir)
 	}
 }
 
+#undef DO_FALLDOWN
