@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <unistd.h>
 
 #include "draw.h"
@@ -9,6 +10,7 @@ screen_buffer_t screen_buffer;
 int main(void)
 {
 	char c;
+	char* in;
 
 	setup_terminal();
 
@@ -20,8 +22,6 @@ int main(void)
 			break;
 		refresh_screen();
 	}
-
-	kill_application();
 
 	return EXIT_SUCCESS;
 }

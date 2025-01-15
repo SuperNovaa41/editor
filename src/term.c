@@ -107,6 +107,9 @@ void setup_terminal(void)
 		exit(EXIT_FAILURE);
 	}
 
+	editor.cx = 0;
+	editor.cy = 0;
+
 	editor.cols = win.ws_col;
 	editor.rows = win.ws_row;
 }

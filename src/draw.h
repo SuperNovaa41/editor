@@ -20,4 +20,16 @@ void refresh_screen(void);
 
 void draw_editor_rows(void);
 
+/**
+ * # move_cursor_pos
+ *
+ * - char** out - pointer to char* which will be malloc'd and have the formatted string placed into
+ * - int x - x pos
+ * - int y - y pos
+ *
+ * out must be free'd
+ */
+void move_cursor_pos(char** out, int x, int y);
+
+
 #endif
