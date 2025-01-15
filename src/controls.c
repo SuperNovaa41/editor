@@ -76,7 +76,8 @@ void move_cursor(movement_t dir)
 			editor.rx--;
 			break;
 		case RIGHT:
-			if (editor.cx + 1 > editor.rows[editor.cy - 1].len)
+			if (editor.cx + 1 > editor.rows[editor.cy - 1].len 
+					&& editor.cx + 1 > editor.screen_cols)
 				break;
 			move_cursor_pos(++editor.cx, editor.cy);
 			editor.rx++;
