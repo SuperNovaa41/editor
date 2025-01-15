@@ -18,6 +18,7 @@
 
 void refresh_screen(void);
 
+void draw_file_buffer(void);
 void draw_editor_rows(void);
 void draw_cursor_pos(void);
 

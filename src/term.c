@@ -6,7 +6,7 @@
 #include <unistd.h>
 
 
-#include "headers/term.h"
+#include "include/term.h"
 
 /** BEGIN extern section **/
 
@@ -109,11 +109,14 @@ void setup_terminal(void)
 
 	editor.control_type = COMMAND_MODE;
 
+	editor.num_rows = 0;
+	editor.rows = NULL;
+
 	editor.cx = 1;
 	editor.cy = 1;
 
-	editor.cols = win.ws_col;
-	editor.rows = win.ws_row;
+	editor.screen_cols = win.ws_col;
+	editor.screen_rows = win.ws_row;
 }
 
 void kill_application(void)
@@ -125,19 +128,21 @@ void kill_application(void)
 	reset_input_mode();
 
 	screen_buffer_free(&screen_buffer);
+
+	free_editor_row();
 }
 
 
-int screen_buffer_append(screen_buffer_t *buf, const char *in, size_t len)
+int screen_buffer_append(const char *in, size_t len)
 {
 	// Need to realloc to allow for the input to fit into the buffer
-	char* new = realloc(buf->text, buf->len + len);
+	char* new = realloc(screen_buffer.text, screen_buffer.len + len);
 
 	if (NULL == new) return -1;
 
-	memcpy(&new[buf->len], in, len);
-	buf->text = new;
-	buf->len += len;
+	memcpy(&new[screen_buffer.len], in, len);
+	screen_buffer.text = new;
+	screen_buffer.len += len;
 	
 	return 0;
 }
@@ -145,4 +150,28 @@ int screen_buffer_append(screen_buffer_t *buf, const char *in, size_t len)
 void screen_buffer_free(screen_buffer_t *buf)
 {
 	free(buf->text);
+}
+
+void free_editor_row(void)
+{
+	size_t i;
+	for (i = 0; i < editor.num_rows; i++)
+		free(editor.rows[i].line);
+	free(editor.rows);
+}
+
+void editor_add_row(const char* line, size_t len)
+{
+	// Need to add space for another row
+	editor.rows = realloc(editor.rows, sizeof(row_t) * (editor.num_rows + 1));
+
+	// Set len and malloc space for the incoming line +1 for \0
+	size_t idx = editor.num_rows;
+	editor.rows[idx].len = len;
+	editor.rows[idx].line = malloc(sizeof(char) * (len + 1));
+
+	memcpy(editor.rows[idx].line, line, len); 
+	editor.rows[idx].line[len] = '\0'; // need to null terminate it
+	
+	editor.num_rows++; 
 }

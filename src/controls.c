@@ -1,9 +1,9 @@
 #include <stdio.h>
 
-#include "headers/__defines.h"
-#include "headers/controls.h"
-#include "headers/draw.h"
-#include "headers/term.h"
+#include "include/__defines.h"
+#include "include/controls.h"
+#include "include/draw.h"
+#include "include/term.h"
 
 extern editor_t editor;
 extern screen_buffer_t screen_buffer;

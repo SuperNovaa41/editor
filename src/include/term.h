@@ -10,9 +10,18 @@ typedef enum {
 } control_type_t;
 
 typedef struct {
+	char* line;
+	size_t len;
+} row_t;
+
+typedef struct {
 	struct termios term_settings;
 	control_type_t control_type;
-	size_t cols, rows;
+	
+	row_t* rows;
+	size_t num_rows;
+
+	size_t screen_cols, screen_rows;
 	int cx, cy; // cursor pos
 } editor_t;
 
@@ -67,7 +76,6 @@ void kill_application(void);
 /**
  * # screen_buffer_append
  *
- * - screen_buffer_t* buf : The screen buffer
  * - const char* in : The input text
  * - size_t len : Length of the input text
  *
@@ -78,7 +86,7 @@ void kill_application(void);
  * Returns -1 on failure, 0 on success
  *
  */
-int screen_buffer_append(screen_buffer_t* buf, const char* in, size_t len);
+int screen_buffer_append(const char* in, size_t len);
 
 /**
  * # screen_buffer_free
@@ -89,5 +97,15 @@ int screen_buffer_append(screen_buffer_t* buf, const char* in, size_t len);
  *
  */
 void screen_buffer_free(screen_buffer_t* buf);
+
+/**
+ * # free_editor_row
+ *
+ * Frees all of the strings in each row
+ * and the row array
+ */
+void free_editor_row(void);
+
+void editor_add_row(const char* line, size_t len);
 
 #endif
