@@ -6,6 +6,9 @@
 #define CLEAR_SCREEN_STR "\e[2J"
 #define CLEAR_SCREEN_STR_LEN 4
 
+#define CLEAR_LINE_STR "\e[2K"
+#define CLEAR_LINE_STR_LEN 4
+
 #define MOVE_CURSOR_HOME_STR "\e[H"
 #define MOVE_CURSOR_HOME_STR_LEN 3
 

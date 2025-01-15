@@ -48,7 +48,10 @@ void refresh_screen(void)
 void draw_file_buffer(void)
 {
 	size_t i;
-	for (i = 0; i < editor.num_rows; i++) {
+
+	// reserve the last line for info
+	for (i = editor.row_offset; i < editor.num_rows && i < (editor.screen_rows + editor.row_offset - 1); i++) { 
+		screen_buffer_append(CLEAR_LINE_STR, CLEAR_LINE_STR_LEN); // clear line first to prevent flickering issues
 		screen_buffer_append(editor.rows[i].line, editor.rows[i].len);
 	}
 }
@@ -56,14 +59,17 @@ void draw_file_buffer(void)
 void draw_editor_rows(void)
 {
 	size_t i;
-	for (i = editor.num_rows; i < editor.screen_rows - 1; i++)
+	for (i = editor.num_rows; i < editor.screen_rows + editor.row_offset - 1; i++) {
+		screen_buffer_append(CLEAR_LINE_STR, CLEAR_LINE_STR_LEN);
 		screen_buffer_append("~\r\n", 3);
+	}
 }
 
 void draw_cursor_pos(void)
 {
 	char* pos = malloc(sizeof(char) * MAX_LEN);
-	snprintf(pos, MAX_LEN, "%d,%d", editor.cx, editor.cy);
+	snprintf(pos, MAX_LEN, "%d,%d", editor.rx, editor.ry);
+	screen_buffer_append(CLEAR_LINE_STR, CLEAR_LINE_STR_LEN);
 	screen_buffer_append(pos, strlen(pos));
 	free(pos);
 }

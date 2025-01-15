@@ -18,8 +18,11 @@ typedef struct {
 	struct termios term_settings;
 	control_type_t control_type;
 	
+	size_t row_offset;
 	row_t* rows;
 	size_t num_rows;
+
+	int rx, ry;
 
 	size_t screen_cols, screen_rows;
 	int cx, cy; // cursor pos

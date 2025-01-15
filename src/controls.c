@@ -73,37 +73,53 @@ void move_cursor(movement_t dir)
 			if (editor.cx - 1 <= 0)
 				break;
 			move_cursor_pos(--editor.cx, editor.cy);	
+			editor.rx--;
 			break;
 		case RIGHT:
 			if (editor.cx + 1 > editor.rows[editor.cy - 1].len)
 				break;
 			move_cursor_pos(++editor.cx, editor.cy);
+			editor.rx++;
 			break;
 		case UP:
-			if (editor.cy -1 <= 0)
+			if (editor.cy - 1 <= 0) {
+				if (editor.row_offset == 0)
+					break;
+				editor.row_offset--;
+				editor.ry--;
 				break;
+			}
 			move_cursor_pos(editor.cx, --editor.cy);
+			editor.ry--;
 			
 			// want to fall down to the end of the line if we're moving to a shorter one
 			DO_FALLDOWN();
 
 			break;
 		case DOWN:
-			if (editor.cy + 1 >= editor.num_rows)
+			if (editor.cy + 1 >= editor.screen_rows - 1) {
+				if (editor.ry + 1 >= editor.num_rows)
+					break;
+				editor.row_offset++;
+				editor.ry++;
 				break;
+			}
+
 			move_cursor_pos(editor.cx, ++editor.cy);
+			editor.ry++;
 			
 			DO_FALLDOWN();
 			
 			break;
 		case HOME:
 			move_cursor_pos(1, 1);
-			editor.cx = 1;
-			editor.cy = 1;
+			editor.cx = 1; editor.cy = 1;
+			editor.rx = 1; editor.ry = 1;
 			break;
 		case BEGIN_LINE:
 			move_cursor_pos(1, editor.cy);
 			editor.cx = 1;
+			editor.rx = 1;
 			break;
 		default:
 			fprintf(stderr, "move_cursor had an invalid input, what the hell.\n");

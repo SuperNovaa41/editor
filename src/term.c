@@ -111,6 +111,10 @@ void setup_terminal(void)
 
 	editor.num_rows = 0;
 	editor.rows = NULL;
+	editor.row_offset = 0;
+
+	editor.rx = 1;
+	editor.ry = 1;
 
 	editor.cx = 1;
 	editor.cy = 1;
