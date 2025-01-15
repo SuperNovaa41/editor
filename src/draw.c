@@ -48,11 +48,21 @@ void refresh_screen(void)
 void draw_file_buffer(void)
 {
 	size_t i;
+	size_t tmp_len;
+
+	char* working_line;
+	char* tmp_line;
 
 	// reserve the last line for info
 	for (i = editor.row_offset; i < editor.num_rows && i < (editor.screen_rows + editor.row_offset - 1); i++) { 
-		screen_buffer_append(CLEAR_LINE_STR, CLEAR_LINE_STR_LEN); // clear line first to prevent flickering issues
-		screen_buffer_append(editor.rows[i].line, editor.rows[i].len);
+		if (editor.rows[i].len <= editor.screen_cols) {
+			screen_buffer_append(CLEAR_LINE_STR, CLEAR_LINE_STR_LEN); // clear line first to prevent flickering issues
+			screen_buffer_append(editor.rows[i].line, editor.rows[i].len);
+		}
+
+		// want to do line splitting here
+		// mimick vim in which we split the overflow line to the next below
+
 	}
 }
 
