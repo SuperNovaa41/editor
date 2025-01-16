@@ -12,6 +12,9 @@ typedef enum {
 typedef struct {
 	char* line;
 	size_t len;
+
+	char* render;
+	size_t r_len;
 } row_t;
 
 typedef struct {
@@ -108,6 +111,8 @@ void screen_buffer_free(screen_buffer_t* buf);
  * and the row array
  */
 void free_editor_row(void);
+
+void editor_render_row(row_t* row);
 
 void editor_add_row(const char* line, size_t len);
 

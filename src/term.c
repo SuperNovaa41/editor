@@ -164,6 +164,23 @@ void free_editor_row(void)
 	free(editor.rows);
 }
 
+void editor_render_row(row_t* row)
+{
+	if (row->render != NULL) // if the row is malloc'd we want to delete it
+		free(row->render);	
+	row->render = malloc(sizeof(char) * row->len);
+}
+
+// small helper function to initialize a row
+void create_row(row_t* row, size_t len)
+{
+	row->len = len;
+	row->line = malloc(sizeof(char) * (len + 1));
+
+	row->render = NULL;
+	row->r_len = 0;
+}
+
 void editor_add_row(const char* line, size_t len)
 {
 	// Need to add space for another row
@@ -171,11 +188,11 @@ void editor_add_row(const char* line, size_t len)
 
 	// Set len and malloc space for the incoming line +1 for \0
 	size_t idx = editor.num_rows;
-	editor.rows[idx].len = len;
-	editor.rows[idx].line = malloc(sizeof(char) * (len + 1));
+	
+	create_row(&editor.rows[idx], len);
 
 	memcpy(editor.rows[idx].line, line, len); 
 	editor.rows[idx].line[len] = '\0'; // need to null terminate it
-	
+
 	editor.num_rows++; 
 }
