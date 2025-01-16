@@ -4,6 +4,8 @@
 #ifndef TERM_H
 #define TERM_H
 
+#define TAB_SIZE 8 
+
 typedef enum {
 	COMMAND_MODE,
 	INSERT_MODE,
@@ -104,6 +106,8 @@ int screen_buffer_append(const char* in, size_t len);
  */
 void screen_buffer_free(screen_buffer_t* buf);
 
+void free_row(row_t* row);
+
 /**
  * # free_editor_rows
  *
@@ -113,6 +117,8 @@ void screen_buffer_free(screen_buffer_t* buf);
 void free_editor_rows(void);
 
 void editor_render_row(row_t* row);
+
+void create_row(row_t* row, size_t len);
 
 void editor_add_row(const char* line, size_t len);
 
