@@ -156,19 +156,36 @@ void screen_buffer_free(screen_buffer_t *buf)
 	free(buf->text);
 }
 
-void free_editor_row(void)
+void free_row(row_t* row)
+{
+	if (row->line != NULL)
+		free(row->line);
+	if (row->render != NULL)
+		free(row->render);
+}
+
+void free_editor_rows(void)
 {
 	size_t i;
 	for (i = 0; i < editor.num_rows; i++)
-		free(editor.rows[i].line);
+		free_row(&editor.rows[i]);
 	free(editor.rows);
 }
 
 void editor_render_row(row_t* row)
 {
+	size_t i, idx;
+
 	if (row->render != NULL) // if the row is malloc'd we want to delete it
 		free(row->render);	
 	row->render = malloc(sizeof(char) * row->len);
+
+	idx = 0;
+	for (i = 0; i < row->len; i++)
+		row->render[idx++] = row->line[i];
+
+	row->render[idx] = '\0';
+	row->r_len = idx;
 }
 
 // small helper function to initialize a row

@@ -105,12 +105,12 @@ int screen_buffer_append(const char* in, size_t len);
 void screen_buffer_free(screen_buffer_t* buf);
 
 /**
- * # free_editor_row
+ * # free_editor_rows
  *
  * Frees all of the strings in each row
  * and the row array
  */
-void free_editor_row(void);
+void free_editor_rows(void);
 
 void editor_render_row(row_t* row);
 
