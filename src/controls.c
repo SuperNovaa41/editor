@@ -64,7 +64,24 @@ int parse_input_char(char input_char)
 	return 0;
 }
 
-#define DO_FALLDOWN() if (editor.cx > editor.rows[editor.cy - 1].len)  {editor.cx = editor.rows[editor.cy - 1].len;move_cursor_pos(editor.cx, editor.cy);}
+void do_falldown(row_t* row)
+{
+	if (editor.cx > row->len) {
+		editor.cx = row->len;
+		editor.rx = row->len;
+		move_cursor_pos(editor.cx, editor.cy);
+	}
+}
+
+/**
+ * TODO: for some reason the cursor is no longer respectingl ine length
+ * when checking where to move
+ *
+ * i imagine this might be something to do with the new functions i added to setup
+ * rows, and that len isn't properly being translated
+ *
+ * check this, if i can't figure it out maybe try valgrind to track everything
+ */
 
 void move_cursor(movement_t dir)
 {
@@ -76,7 +93,7 @@ void move_cursor(movement_t dir)
 			editor.rx--;
 			break;
 		case RIGHT:
-			if (editor.cx + 1 > editor.rows[editor.cy - 1].len 
+			if (editor.cx + 1 > editor.rows[editor.ry - 1].len 
 					&& editor.cx + 1 > editor.screen_cols)
 				break;
 			move_cursor_pos(++editor.cx, editor.cy);
@@ -94,7 +111,7 @@ void move_cursor(movement_t dir)
 			editor.ry--;
 			
 			// want to fall down to the end of the line if we're moving to a shorter one
-			DO_FALLDOWN();
+			do_falldown(&editor.rows[editor.ry - 1]);
 
 			break;
 		case DOWN:
@@ -108,9 +125,9 @@ void move_cursor(movement_t dir)
 
 			move_cursor_pos(editor.cx, ++editor.cy);
 			editor.ry++;
-			
-			DO_FALLDOWN();
-			
+
+			do_falldown(&editor.rows[editor.ry - 1]);
+
 			break;
 		case HOME:
 			move_cursor_pos(1, 1);
