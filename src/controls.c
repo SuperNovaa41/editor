@@ -81,6 +81,10 @@ void do_falldown(row_t* row)
  * rows, and that len isn't properly being translated
  *
  * check this, if i can't figure it out maybe try valgrind to track everything
+ *
+ * also try going back a few commits to see where the regression began
+ *
+ * consider setting up a test suite
  */
 
 void move_cursor(movement_t dir)
@@ -94,7 +98,7 @@ void move_cursor(movement_t dir)
 			break;
 		case RIGHT:
 			if (editor.cx + 1 > editor.rows[editor.ry - 1].len 
-					&& editor.cx + 1 > editor.screen_cols)
+					|| editor.cx + 1 > editor.screen_cols)
 				break;
 			move_cursor_pos(++editor.cx, editor.cy);
 			editor.rx++;
